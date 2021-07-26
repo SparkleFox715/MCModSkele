@@ -32,8 +32,37 @@ public class MCModeRunner {
             origin.add(def);
         }
         if(!auto){
+            int playerRange = 30;//30 blocks
             blocks = quickSort(blocks);
             System.out.println(blocks);
+            Queue<Block>[]buckets = new Queue[7];
+            for(int i=0;i<7;i++){
+                buckets[i] = new LinkedList<>();
+            }
+            HashMap<Integer, String> LineColor = new HashMap<>();
+            LineColor.put(0, "black");
+            LineColor.put(1, "grey");
+            LineColor.put(2, "yellow");
+            LineColor.put(3, "red");
+            LineColor.put(4, "blue");
+            LineColor.put(5, "teal");
+            LineColor.put(6, "green");
+            for(int i = 0;i<blocks.size();i++) {
+                if (blocks.get(i).Otype < 7) {
+                    buckets[blocks.get(i).Otype].add(blocks.get(i));
+                }
+
+            }
+            for(int i = 0;i<7;i++){
+                while(buckets[i].size()>0) {
+                    Block temp = buckets[i].poll();
+                    if (temp.getPlayerDist() <= playerRange) {
+                        System.out.println(temp + " " + LineColor.get(temp.Otype));
+                    }
+                }
+            }
+            //send these strings to the MC client to generate said-colored string pointing at ores.
+            //An array of stacks is used incase the use wants to specify which ores they wish to look for.
         }else {
             addNodes(nodes);
             System.out.println(pq);
