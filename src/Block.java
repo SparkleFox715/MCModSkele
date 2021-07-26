@@ -3,7 +3,6 @@ public class Block {
     int XCord,YCord, ZCord;
     int Btype;//0->air, 1->ore, 2 ->other
     int Otype;//0->coal, 1->iron,2->gold,3->redstone, 4->lapiz, 5->diamond, 6->emerald, 7->neither
-    public String lineColor;
     HashMap<Integer, String> BlockType = new HashMap<>();
     HashMap<Integer, String> OreType = new HashMap<>();
     public Block(int Btype, int OType, int X,int Y, int Z){
@@ -23,7 +22,6 @@ public class Block {
         OreType.put(5, "diamond");
         OreType.put(6, "emerald");
         OreType.put(7, "player");
-        lineColor="";
     }
     public int[] getCords(){
         return new int[]{XCord, YCord, ZCord};
