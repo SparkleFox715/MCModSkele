@@ -4,12 +4,13 @@ public class MCModeRunner {
     static HashMap<Node, Double> distTo = new HashMap<>();
     static HashMap<Node, Node> edgeTo = new HashMap<>();
     public static void main(String[] args) throws IOException{
+        //Representing player pos
         Block playerPos = new Block(2, 7, 0,0,0);
-        Node origin = new Node(playerPos);
-        ArrayList<Block> blocks = new ArrayList();
-        ArrayList<Node> nodes = new ArrayList();
+        Node origin = new Node(playerPos); //Representing starting node/player node
+        ArrayList<Block> blocks = new ArrayList();//contains all ores of interest
+        ArrayList<Node> nodes = new ArrayList(); //contains nodes of ores of interest
         PriorityQueue pq = new PriorityQueue(new NodeComparator());
-        ArrayList<Node> fin = new ArrayList();
+        ArrayList<Node> fin = new ArrayList();//Contains the final order of nodes/ores
         int chunkw, chunkl;
         int blockPreference;
         Scanner in = new Scanner(new File("input.txt"));
@@ -21,6 +22,7 @@ public class MCModeRunner {
         edgeTo.put(origin, null);
         pq.add(origin);
         blocks.addAll(searchOres(chunkw, chunkl, blockPreference));
+        //the purpose of this loop is to intake ore info from txt file
         while(in.hasNextLine()){
             Block temp = new Block(in.nextInt(),in.nextInt(),in.nextInt(),in.nextInt(),in.nextInt());
             blocks.add(temp);
@@ -31,7 +33,7 @@ public class MCModeRunner {
             nodes.add(def);
             origin.add(def);
         }
-        if(!auto){
+        if(!auto){//manual
             int playerRange = 30;//30 blocks
             blocks = quickSort(blocks);
             System.out.println(blocks);
@@ -63,13 +65,14 @@ public class MCModeRunner {
             }
             //send these strings to the MC client to generate said-colored string pointing at ores.
             //An array of stacks is used incase the use wants to specify which ores they wish to look for.
-        }else {
+        }else {//auto
             addNodes(nodes);
             System.out.println(pq);
             Prim(pq, origin, nodes, fin);
             System.out.println(fin);
         }
     }
+    //Prim's algorithm
     public static void Prim(PriorityQueue<Node> pq, Node origin, ArrayList<Node>nodes, ArrayList<Node> fin){
         Node current = origin;
         edgeTo.remove(current);
@@ -100,6 +103,7 @@ public class MCModeRunner {
         temp.addAll(pq);
         return pq;
     }
+    //connecting all the nodes together to make a weighted graph
     public static void addNodes(ArrayList<Node> nodes){
         for(int x = 0;x<nodes.size();x++){
             for(int i=0;i<nodes.size();i++){
@@ -109,6 +113,7 @@ public class MCModeRunner {
             }
         }
     }
+    //Used in the MC client to find ores within the range of chunks
     public static ArrayList<Block> searchOres(int chunkw, int chunkl, int blockPreference){
         ArrayList<Block> ret = new ArrayList();
         for(int i =0;i<257;i++){
@@ -123,6 +128,7 @@ public class MCModeRunner {
         }
         return ret;
     }
+    //used to set priority for ores in the future
     public static ArrayList<Block> quickSort(ArrayList<Block> blocks){
         if(blocks.size()<=1){
             return blocks;
@@ -146,6 +152,7 @@ public class MCModeRunner {
         smaller.addAll(larger);
         return smaller;
     }
+
     private static class NodeComparator implements Comparator<Node>{
         public int compare(Node n1, Node n2){
             if(distTo.get(n1)<distTo.get(n2))
